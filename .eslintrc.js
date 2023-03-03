@@ -11,7 +11,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
+    'prettier',
     'plugin:prettier/recommended',
   ],
   root: true,
@@ -23,7 +23,6 @@ module.exports = {
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-misused-promises': 'error',
     '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
     '@typescript-eslint/no-var-requires': 'off',
@@ -35,5 +34,18 @@ module.exports = {
     'no-unused-vars': 'off',
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'prefer-const': 'error',
+    '@typescript-eslint/typedef': [
+      'error',
+      {
+        arrayDestructuring: true,
+        arrowParameter: true,
+        memberVariableDeclaration: true,
+        objectDestructuring: true,
+        parameter: true,
+        propertyDeclaration: true,
+        variableDeclaration: true,
+        variableDeclarationIgnoreFunction: true
+      }
+    ]
   },
 };
