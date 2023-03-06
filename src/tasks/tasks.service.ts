@@ -1,4 +1,4 @@
-import { DB_TASK_MODEL } from '../constants';
+import { DB_TASK_MODEL } from './../constants';
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskDocument } from './task.schema';
