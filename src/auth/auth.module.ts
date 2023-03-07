@@ -28,8 +28,6 @@ import { JwtStrategy } from './jwt.strategy';
   providers: [
     AuthService, 
     JwtStrategy,
-    UserAuthService,
-    UsersService
   ],
   exports: [
     AuthService, 
