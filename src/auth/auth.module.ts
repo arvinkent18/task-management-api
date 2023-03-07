@@ -1,5 +1,3 @@
-import { UserAuthService } from './../shared/user-auth/user-auth.service';
-import { UserAuthModule } from './../shared/user-auth/user-auth.module';
 import { UsersService } from '../users/users.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,6 +6,9 @@ import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { MongooseModule } from '@nestjs/mongoose';
+import { DB_USER_MODEL } from '../constants';
+import { UserSchema } from 'users/user.schema';
 
 @Module({
   imports: [
@@ -23,11 +24,13 @@ import { JwtStrategy } from './jwt.strategy';
       inject: [ConfigService],
     }),
     ConfigModule,
+    MongooseModule.forFeature([{ name: DB_USER_MODEL, schema: UserSchema }]),
   ],
   controllers: [AuthController],
   providers: [
     AuthService, 
     JwtStrategy,
+    UsersService,
   ],
   exports: [
     AuthService, 
