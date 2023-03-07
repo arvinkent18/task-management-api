@@ -1,5 +1,5 @@
-import { DB_TASK_MODEL, ERR_TASK_CONFLICT } from './../constants';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { DB_TASK_MODEL, ERR_UNPROCESSABLE_ENTITY } from './../constants';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskDocument } from './task.schema';
 import { Model } from 'mongoose';
@@ -17,7 +17,7 @@ export class TasksService {
     const task = await this.taskModel.findOne({ title }).exec();
 
     if (task) {
-      throw new ConflictException(ERR_TASK_CONFLICT);
+      throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
     const createdTask = new this.taskModel({ ...createTaskDto });

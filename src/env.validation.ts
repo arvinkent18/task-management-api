@@ -7,5 +7,7 @@ export const envValidations: ConfigModuleOptions = {
     NODE_ENV: Joi.string().valid(...Object.values(Environment)),
     PORT: Joi.number().default(3000),
     MONGODB_URI: Joi.string().required(),
+    JWT_SECRET: Joi.string().required(),
+    JWT_EXPIRES_IN: Joi.string().required(),
   }),
 };
