@@ -1,4 +1,4 @@
-import { mockTask } from './mocks/mock-tasks';
+import { mockTask, mockTaskModel } from './mocks/task.mock';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { TasksService } from './tasks.service';
@@ -7,14 +7,6 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { DB_TASK_MODEL } from '../constants';
 import { Model } from 'mongoose';
 import { TaskDocument } from './task.schema';
-
-const mockTaskModel = {
-  new: jest.fn().mockResolvedValue(mockTask),
-  constructor: jest.fn().mockResolvedValue(mockTask),
-  find: jest.fn(),
-  create: jest.fn(),
-  exec: jest.fn(),
-};
 
 describe('TasksService', () => {
   let tasksService: TasksService;

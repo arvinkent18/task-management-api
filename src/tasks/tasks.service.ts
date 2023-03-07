@@ -1,5 +1,5 @@
-import { DB_TASK_MODEL } from './../constants';
-import { Injectable } from '@nestjs/common';
+import { DB_TASK_MODEL, ERR_TASK_CONFLICT } from './../constants';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskDocument } from './task.schema';
 import { Model } from 'mongoose';
@@ -13,6 +13,15 @@ export class TasksService {
   ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
-    return new this.taskModel(createTaskDto).save();
+    const { title } = createTaskDto;
+    const task = await this.taskModel.findOne({ title }).exec();
+
+    if (task) {
+      throw new ConflictException(ERR_TASK_CONFLICT);
+    }
+
+    const createdTask = new this.taskModel({ ...createTaskDto });
+
+    return createdTask.save();
   }
 }
