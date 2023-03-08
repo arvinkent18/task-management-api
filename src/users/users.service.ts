@@ -20,7 +20,7 @@ export class UsersService {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
-    const createdTask = new this.userModel({ ...CreateUserDto });
+    const createdTask = new this.userModel({ ...createUserDto });
 
     return createdTask.save();
   }

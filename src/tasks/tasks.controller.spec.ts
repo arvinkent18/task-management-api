@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { mockTask, mockTaskModel } from './mocks/task.mock';
+import { mockTask, mockTaskModel } from './mocks/tasks.mock';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { Task } from './task.interface';
@@ -41,6 +41,6 @@ describe('TasksController', () => {
     jest.spyOn(tasksService, 'create').mockResolvedValue(createTask);
 
     const result: Task = await tasksController.create(createTask);
-    expect(result).toEqual({ ...mockTask })
+    expect(result).toEqual({ ...mockTask });
   });
 });

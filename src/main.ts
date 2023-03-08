@@ -9,9 +9,15 @@ async function bootstrap(): Promise<void> {
     const app: INestApplication = await NestFactory.create(AppModule);
 
     app.enableCors();
-    app.useGlobalPipes(new ValidationPipe());
-    SwaggerModule.setup('api-docs', app, SwaggerModule.createDocument(app, swaggerConfig));
-    
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, transform: true }),
+    );
+    SwaggerModule.setup(
+      'api-docs',
+      app,
+      SwaggerModule.createDocument(app, swaggerConfig),
+    );
+
     await app.listen(3000);
   } catch (error) {
     console.error(error);

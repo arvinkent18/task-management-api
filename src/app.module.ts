@@ -9,11 +9,11 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    AppConfigModule, 
-    DatabaseModule, 
-    AuthModule, 
-    TasksModule, 
-    UsersModule, 
+    AppConfigModule,
+    DatabaseModule,
+    AuthModule,
+    TasksModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

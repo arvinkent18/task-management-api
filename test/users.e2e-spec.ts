@@ -1,11 +1,11 @@
-import { mockTask } from '../src/tasks/mocks/tasks.mock';
+import { mockUser } from '../src/users/mocks/users.mock';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { clearDatabase, closeDatabaseConnection } from './test-utils';
 
-describe('Tasks (e2e)', () => {
+describe('Users (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
 
@@ -25,20 +25,19 @@ describe('Tasks (e2e)', () => {
     await app.close();
   });
 
-  it('should create a task', async () => {
+  it('should able to create user', async () => {
     const response = await request(app.getHttpServer())
-      .post('/tasks')
-      .send(mockTask)
+      .post('/users')
+      .send(mockUser)
       .expect(201);
 
-    expect(response.body.title).toEqual(mockTask.title);
-    expect(response.body.description).toEqual(mockTask.description);
+    expect(response.body.username).toEqual(mockUser.username);
   });
 
-  it('should throw an error for existing task', async () => {
+  it('should throw an error for existing user', async () => {
     await request(app.getHttpServer())
-      .post('/tasks')
-      .send(mockTask)
+      .post('/users')
+      .send(mockUser)
       .expect(HttpStatus.UNPROCESSABLE_ENTITY);
   });
 });

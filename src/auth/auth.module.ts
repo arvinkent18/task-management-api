@@ -8,7 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DB_USER_MODEL } from '../constants';
-import { UserSchema } from 'users/user.schema';
+import { UserSchema } from '../users/user.schema';
 
 @Module({
   imports: [
@@ -24,12 +24,15 @@ import { UserSchema } from 'users/user.schema';
       inject: [ConfigService],
     }),
     ConfigModule,
-    MongooseModule.forFeature([{ name: DB_USER_MODEL, schema: UserSchema }]),
+    MongooseModule.forFeature([{ 
+      name: DB_USER_MODEL, 
+      schema: UserSchema, 
+    }]),
   ],
   controllers: [AuthController],
   providers: [
     AuthService, 
-    JwtStrategy,
+    JwtStrategy, 
     UsersService,
   ],
   exports: [

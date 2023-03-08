@@ -10,9 +10,9 @@ export class TaskDocument extends Document implements Task {
   @Prop({ required: true })
   description!: string;
 
-  @Prop({ 
-    enum: TaskStatus, 
-    default: TaskStatus.OPEN, 
+  @Prop({
+    enum: TaskStatus,
+    default: TaskStatus.OPEN,
   })
   status!: TaskStatus;
 

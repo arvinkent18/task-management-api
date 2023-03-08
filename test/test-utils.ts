@@ -1,14 +1,18 @@
-import { getModelToken } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { DB_TASK_MODEL } from '../src/constants';
-import { TaskDocument } from '../src/tasks/task.schema';
 import { TestingModule } from '@nestjs/testing';
+import { getConnectionToken } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 
-export const clearDatabase = async (
-  moduleFixture: TestingModule,
-): Promise<void> => {
-  const taskModel = moduleFixture.get<Model<TaskDocument>>(
-    getModelToken(DB_TASK_MODEL),
-  );
-  await taskModel.deleteMany({});
+export const closeDatabaseConnection = async (moduleFixture: TestingModule) => {
+  const connection = moduleFixture.get<Connection>(getConnectionToken());
+  await connection.close();
+};
+
+export const clearDatabase = async (moduleFixture: TestingModule) => {
+  const connection = moduleFixture.get<Connection>(getConnectionToken());
+  const collections = connection.collections;
+
+  for (const key in collections) {
+    const collection = collections[key];
+    await collection.deleteMany({});
+  }
 };

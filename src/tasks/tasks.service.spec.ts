@@ -1,4 +1,4 @@
-import { mockTask, mockTaskModel } from './mocks/task.mock';
+import { mockTask, mockTaskModel } from './mocks/tasks.mock';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { TasksService } from './tasks.service';
