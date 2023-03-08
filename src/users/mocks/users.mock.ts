@@ -8,9 +8,13 @@ export const mockUser: User = {
 };
 
 export const mockUserModel = {
-  // new: jest.fn().mockResolvedValue(mockUser),
-  // constructor: jest.fn().mockResolvedValue(mockUser),
-  // find: jest.fn(),
-  create: jest.fn(),
-  exec: jest.fn(),
+  create: jest.fn().mockResolvedValueOnce(mockUser),
+  findOne: jest.fn().mockReturnThis(),
+  exec: jest.fn().mockResolvedValueOnce(mockUser),
+  save: jest.fn().mockResolvedValueOnce(mockUser),
 };
+
+jest.spyOn(mockUserModel, 'findOne').mockReturnValueOnce({
+  select: jest.fn().mockReturnThis(),
+  exec: jest.fn().mockResolvedValueOnce(null),
+});

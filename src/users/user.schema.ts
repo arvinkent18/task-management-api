@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { UserStatus } from './user-status.enum';
 import { User } from './user.interface';
-import * as bcrypt from 'bcrypt';
+import { hashPassword } from '../common/helpers/password-hashing';
 
 @Schema()
 export class UserDocument extends Document implements User {
@@ -35,10 +35,7 @@ UserSchema.pre('save', async function (next) {
   }
 
   try {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(user.password, salt);
-
-    user.password = hash;
+    user.password = await hashPassword(user.password);
     next();
   } catch (error) {
     return next(error);

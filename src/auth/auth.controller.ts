@@ -1,6 +1,3 @@
-import { UsersService } from './../users/users.service';
-import { User } from '../users/user.interface';
-import { CreateUserDto } from '../users/dto/create-user.dto';
 import { Body, Controller, Post, HttpStatus, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';

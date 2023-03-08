@@ -19,7 +19,7 @@ export class UsersService {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
-    return new this.userModel({ ...createUserDto }).save();
+    return this.userModel.create(createUserDto);
   }
 
   async checkIfUserExists(username: string): Promise<User> {

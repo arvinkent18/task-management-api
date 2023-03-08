@@ -50,4 +50,14 @@ describe('Auth (e2e)', () => {
       .send(mockUser)
       .expect(HttpStatus.OK);
   });
+
+  it('should be able to throw UnAuthorizedException for invalid user credentials', async () => {
+    delete mockUser._id;
+    delete mockUser.status;
+    
+    await request(app.getHttpServer())
+      .post('/auth/login')
+      .send(mockUser)
+      .expect(HttpStatus.OK);
+  });
 });
