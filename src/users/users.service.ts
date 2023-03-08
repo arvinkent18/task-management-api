@@ -19,7 +19,9 @@ export class UsersService {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
-    return this.userModel.create(createUserDto);
+    const createdUser = this.userModel.create(createUserDto);
+
+    return createdUser;
   }
 
   async checkIfUserExists(username: string): Promise<User> {
