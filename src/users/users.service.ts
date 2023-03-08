@@ -14,14 +14,15 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { username } = createUserDto;
-    const user = await this.userModel.findOne({ username }).exec();
 
-    if (user) {
+    if (this.checkIfUserExists(username)) {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
-    const createdTask = new this.userModel({ ...createUserDto });
+    return new this.userModel({ ...createUserDto }).save();
+  }
 
-    return createdTask.save();
+  async checkIfUserExists(username: string): Promise<User> {
+    return this.userModel.findOne({ username }).exec();
   }
 }

@@ -1,41 +1,47 @@
+import { UsersService } from './../users/users.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { Token } from './token.interface';
 import { User } from '../users/user.interface';
+import { Payload } from './payload.interface';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
+  ) {}
 
-  // async validateUser(username: string, password: string): Promise<User> {
-  //   const user = await this.usersService.findOne(username);
+  async validateUser(username: string, password: string): Promise<User> {
+    const user = await this.usersService.checkIfUserExists(username);
 
-  //   if (user && (await bcrypt.compare(password, user.password))) {
-  //     const { password, ...result } = user;
+    if (!user) {
+      throw new UnauthorizedException();
+    }
 
-  //     return result;
-  //   }
-  //   return null;
-  // }
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return user;
+    }
+  }
 
-  // async login(loginDto: LoginDto): Promise<Token> {
-  //   const user = await this.validateUser(
-  //     loginDto.username,
-  //     loginDto.password,
-  //   );
-  //   if (!user) {
-  //     throw new UnauthorizedException();
-  //   }
-  //   const payload = { username: user.username, sub: user._id };
-  //   return {
-  //     accessToken: this.jwtService.sign(payload),
-  //   };
-  // }
+  async login(loginDto: LoginDto): Promise<Token> {
+    const { username, password } = loginDto;
 
-  async generateToken(user: User): Promise<string> {
-    const payload = { username: user.username };
+    const user: User = await this.validateUser(username, password);
+
+    const payload: Payload = {
+      _id: user._id,
+      username: user.username,
+    };
+
+    return {
+      accessToken: await this.generateToken(payload),
+    };
+  }
+
+  async generateToken(payload: Payload): Promise<string> {
     return this.jwtService.signAsync(payload);
   }
 }
