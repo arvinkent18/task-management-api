@@ -4,9 +4,10 @@ import { getModelToken } from '@nestjs/mongoose';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from './task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { DB_TASK_MODEL } from '../constants';
+import { DB_TASK_MODEL, ERR_UNPROCESSABLE_ENTITY } from '../constants';
 import { Model } from 'mongoose';
 import { TaskDocument } from './task.schema';
+import { UnprocessableEntityException } from '@nestjs/common';
 
 describe('TasksService', () => {
   let tasksService: TasksService;
@@ -37,11 +38,33 @@ describe('TasksService', () => {
     jest
       .spyOn(taskModel, 'create')
       .mockImplementationOnce(() => Promise.resolve(mockTask));
-    const createTask: CreateTaskDto = {
+    const createTaskDto: CreateTaskDto = {
       title: 'Test task',
       description: 'Test description',
       status: TaskStatus.OPEN,
     };
-    expect(createTask).toEqual(mockTask);
+    mockTaskModel.findOne.mockReturnValueOnce(null);
+    const result = await tasksService.createTask(createTaskDto);
+  
+    expect(result).toEqual(mockTask);
+    expect(mockTaskModel.create).toHaveBeenCalledWith(createTaskDto);
+    expect(mockTaskModel.findOne).toHaveBeenCalledWith({ title: createTaskDto.title });
+  });
+
+  it('should throw UnprocessableEntityException if tasks already exists', async () => {
+    const existingTask = { ...mockTask };
+    jest
+      .spyOn(tasksService, 'checkIfTaskExists')
+      .mockResolvedValueOnce(existingTask);
+
+    const createTaskDto: CreateTaskDto = {
+      title: 'Test task',
+      description: 'Test description',
+      status: TaskStatus.OPEN,
+    };
+
+    await expect(tasksService.createTask(createTaskDto)).rejects.toThrow(
+      new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY),
+    );
   });
 });

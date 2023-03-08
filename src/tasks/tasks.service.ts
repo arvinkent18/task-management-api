@@ -12,16 +12,21 @@ export class TasksService {
     @InjectModel(DB_TASK_MODEL) private readonly taskModel: Model<TaskDocument>,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto): Promise<Task> {
+  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     const { title } = createTaskDto;
-    const task = await this.taskModel.findOne({ title }).exec();
 
-    if (task) {
+    if (await this.checkIfTaskExists(title)) {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
-    const createdTask = new this.taskModel({ ...createTaskDto });
+    const createdTask = this.taskModel.create(createTaskDto);
 
-    return createdTask.save();
+    return createdTask;
+  }
+
+  async checkIfTaskExists(title: string): Promise<Task> {
+    const task = await this.taskModel.findOne({ title }).exec();
+
+    return task;
   }
 }

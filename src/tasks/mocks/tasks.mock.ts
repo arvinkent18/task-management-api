@@ -8,9 +8,13 @@ export const mockTask: Task = {
 };
 
 export const mockTaskModel = {
-  new: jest.fn().mockResolvedValue(mockTask),
-  constructor: jest.fn().mockResolvedValue(mockTask),
-  find: jest.fn(),
-  create: jest.fn(),
-  exec: jest.fn(),
+  create: jest.fn().mockResolvedValueOnce(mockTask),
+  findOne: jest.fn().mockReturnThis(),
+  exec: jest.fn().mockResolvedValueOnce(mockTask),
+  save: jest.fn().mockResolvedValueOnce(mockTask),
 };
+
+jest.spyOn(mockTaskModel, 'findOne').mockReturnValueOnce({
+  select: jest.fn().mockReturnThis(),
+  exec: jest.fn().mockResolvedValueOnce(null),
+});
