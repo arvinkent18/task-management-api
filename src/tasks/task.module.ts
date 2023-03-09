@@ -7,7 +7,10 @@ import { DB_TASK_MODEL } from '../constants';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: DB_TASK_MODEL, schema: TaskSchema }]),
+    MongooseModule.forFeature([{ 
+      name: DB_TASK_MODEL, 
+      schema: TaskSchema, 
+    }]),
   ],
   providers: [TasksService],
   controllers: [TasksController],

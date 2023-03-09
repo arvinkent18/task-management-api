@@ -1,9 +1,17 @@
 import { Task } from './task.interface';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { TaskStatus } from './task-status.enum';
-@Schema()
+@Schema({ timestamps: true })
 export class TaskDocument extends Document implements Task {
+  @Prop({
+    name: 'user_id',
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
+  userId!: mongoose.Schema.Types.ObjectId;
+
   @Prop({ required: true })
   title!: string;
 
@@ -15,12 +23,6 @@ export class TaskDocument extends Document implements Task {
     default: TaskStatus.OPEN,
   })
   status!: TaskStatus;
-
-  @Prop({ default: Date.now })
-  createdAt!: Date;
-
-  @Prop({ default: Date.now })
-  updatedAt!: Date;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(TaskDocument);

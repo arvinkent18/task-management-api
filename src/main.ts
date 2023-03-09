@@ -1,8 +1,8 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SwaggerModule } from '@nestjs/swagger';
-import { swaggerConfig } from 'config/swagger.config';
+import { SwaggerModule} from '@nestjs/swagger';
+import { swaggerConfig, swaggerCustomOptions } from './config/swagger.config';
 
 async function bootstrap(): Promise<void> {
   try {
@@ -16,6 +16,7 @@ async function bootstrap(): Promise<void> {
       'api-docs',
       app,
       SwaggerModule.createDocument(app, swaggerConfig),
+      swaggerCustomOptions,
     );
 
     await app.listen(3000);

@@ -1,5 +1,9 @@
 import { User } from './user.interface';
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  UnprocessableEntityException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { DB_USER_MODEL, ERR_UNPROCESSABLE_ENTITY } from '../constants';
 import { Model } from 'mongoose';
@@ -12,20 +16,44 @@ export class UsersService {
     @InjectModel(DB_USER_MODEL) private readonly userModel: Model<UserDocument>,
   ) {}
 
+  /**
+   * Creates a new user based on the given user data.
+   *
+   * @param {CreateUserDto} createUserDto - The data for the user to create.
+   * @throws {UnprocessableEntityException} If the user already exists.
+   * @throws {InternalServerErrorException} If there is an internal server error.
+   * @returns {Promise<User>} The newly created user.
+   */
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { username } = createUserDto;
 
-    if (await this.checkIfUserExists(username)) {
+    if (await this.findUser(username)) {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
-    const createdUser = this.userModel.create(createUserDto);
+    try {
+      const createdUser = this.userModel.create(createUserDto);
 
-    return createdUser;
+      return createdUser;
+    } catch (err) {
+      throw new InternalServerErrorException();
+    }
   }
 
-  async checkIfUserExists(username: string): Promise<User> {
+  /**
+   * Checks whether a user with the given username exists.
+   *
+   * @param {string} username - The username to check.
+   * @returns {Promise<User | null>} The user with the given username, or null if it does not exist.
+   */
+  async findUser(username: string): Promise<User | null> {
+    console.log('username', username)
     const user = await this.userModel.findOne({ username }).exec();
+    
+
+    if (!user) {
+      return null;
+    }
 
     return user;
   }

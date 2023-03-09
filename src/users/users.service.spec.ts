@@ -8,6 +8,7 @@ import { UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hashPassword } from '../common/helpers/password-hashing';
 import { UnprocessableEntityException } from '@nestjs/common';
+import { User } from './user.interface';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -30,37 +31,46 @@ describe('UsersService', () => {
     );
   });
 
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
     expect(usersService).toBeDefined();
   });
 
-  it('should create a new user', async () => {
-    const createUserDto: CreateUserDto = {
-      username: 'admin',
-      password: await hashPassword('admin'),
-    };
-    mockUserModel.findOne.mockReturnValueOnce(null);
-  
-    const result = await usersService.createUser(createUserDto);
-  
-    expect(result).toEqual(mockUser);
-    expect(mockUserModel.create).toHaveBeenCalledWith(createUserDto);
-    expect(mockUserModel.findOne).toHaveBeenCalledWith({ username: createUserDto.username });
-  });
+  describe('createUser', () => {
+    it('should create a new user', async () => {
+      const createUserDto: CreateUserDto = {
+        username: 'admin',
+        password: await hashPassword('admin'),
+      };
+      mockUserModel.findOne.mockReturnValueOnce(null);
 
-  it('should throw UnprocessableEntityException if user already exists', async () => {
-    const existingUser = { ...mockUser };
-    jest
-      .spyOn(usersService, 'checkIfUserExists')
-      .mockResolvedValueOnce(existingUser);
+      const createdUser: User = await usersService.createUser(createUserDto);
 
-    const createUserDto: CreateUserDto = {
-      username: 'admin',
-      password: await hashPassword('admin'),
-    };
+      expect(createdUser).toEqual(mockUser);
+      expect(mockUserModel.create).toHaveBeenCalledWith(createUserDto);
+      expect(mockUserModel.findOne).toHaveBeenCalledWith({
+        username: createUserDto.username,
+      });
+    });
 
-    await expect(usersService.createUser(createUserDto)).rejects.toThrow(
-      new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY),
-    );
+    it('should throw UnprocessableEntityException if user already exists', async () => {
+      const existingUser = { ...mockUser };
+      jest
+        .spyOn(usersService, 'findUser')
+        .mockResolvedValueOnce(existingUser);
+
+      const createUserDto: CreateUserDto = {
+        username: 'admin',
+        password: await hashPassword('admin'),
+      };
+
+      await expect(usersService.createUser(createUserDto)).rejects.toThrow(
+        new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY),
+      );
+    });
   });
 });

@@ -1,3 +1,4 @@
+import { ERR_UNPROCESSABLE_ENTITY } from './../constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
@@ -6,6 +7,8 @@ import { mockTask, mockTaskModel } from './mocks/tasks.mock';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { Task } from './task.interface';
+import { mockUser } from '../users/mocks/users.mock';
+import { UnprocessableEntityException } from '@nestjs/common';
 
 describe('TasksController', () => {
   let tasksController: TasksController;
@@ -27,20 +30,52 @@ describe('TasksController', () => {
     tasksController = module.get<TasksController>(TasksController);
   });
 
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
     expect(tasksController).toBeDefined();
   });
 
-  it('should return the newly created task', async () => {
-    const createTask: CreateTaskDto = {
-      title: 'Test task',
-      description: 'Test description',
-      status: TaskStatus.OPEN,
-    };
+  describe('createTask', () => {
+    it('should create a new task and return it', async () => {
+      const createTaskDto: CreateTaskDto = {
+        title: 'Test task',
+        description: 'Test description',
+        status: TaskStatus.OPEN,
+      };
 
-    jest.spyOn(tasksService, 'create').mockResolvedValue(createTask);
+      jest.spyOn(tasksService, 'createTask').mockResolvedValue(mockTask);
 
-    const result: Task = await tasksController.create(createTask);
-    expect(result).toEqual({ ...mockTask });
+      const result = await tasksController.createTask(mockUser, createTaskDto);
+
+      expect(result).toEqual(mockTask);
+      expect(tasksService.createTask).toHaveBeenCalledWith(
+        mockUser,
+        createTaskDto,
+      );
+    });
+
+    it('should throw UnprocessableEntityException if tasks already exists', async () => {
+      const createTaskDto: CreateTaskDto = {
+        title: 'Test task',
+        description: 'Test description',
+        status: TaskStatus.OPEN,
+      };
+
+      jest
+        .spyOn(tasksService, 'createTask')
+        .mockRejectedValue(new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY));
+
+      await expect(
+        tasksController.createTask(mockUser, createTaskDto),
+      ).rejects.toThrow(UnprocessableEntityException);
+      expect(tasksService.createTask).toHaveBeenCalledWith(
+        mockUser,
+        createTaskDto,
+      );
+    });
   });
 });

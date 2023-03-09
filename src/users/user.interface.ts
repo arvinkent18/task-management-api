@@ -5,5 +5,5 @@ export interface User {
   _id?: Types.ObjectId,
   username: string;
   password: string;
-  status: UserStatus;
+  status?: UserStatus;
 }
