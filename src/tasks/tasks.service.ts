@@ -63,8 +63,14 @@ export class TasksService {
    *
    * @param {Types.ObjectId} id - The ID of the task to update
    * @param {UpdateTaskDto} updateTaskDto - The updated task data
+<<<<<<< HEAD
    * @throws {NotFoundException} If no task is found with the given ID
    * @returns {Promise<Task>} The updated task
+=======
+   * @returns {Promise<Task>} The updated task
+   * @throws {NotFoundException} If no task is found with the given ID
+   * @returns {Promise<Task>}
+>>>>>>> 9e1a960358dc861c568db07b5d5b021f91698830
    */
   async updateTask(
     id: Types.ObjectId,
@@ -85,6 +91,7 @@ export class TasksService {
    * Deletes a task by ID
    *
    * @param {Types.ObjectId} id - The ID of the task to delete
+<<<<<<< HEAD
    * @throws {NotFoundException} If no task is found with the given ID
    * @returns {Promise<void>}
    */
@@ -94,5 +101,17 @@ export class TasksService {
     if (!task) {
       throw new NotFoundException();
     }
+=======
+   * @returns {Promise<Task>} The deleted task
+   * @throws {NotFoundException} If no task is found with the given ID
+   */
+  async deleteTask(id: Types.ObjectId): Promise<Task> {
+    const task = await this.taskModel.findByIdAndRemove(id);
+    if (!task) {
+      throw new NotFoundException();
+    }
+
+    return task;
+>>>>>>> 9e1a960358dc861c568db07b5d5b021f91698830
   }
 }
