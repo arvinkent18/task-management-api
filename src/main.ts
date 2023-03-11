@@ -1,14 +1,16 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SwaggerModule} from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig, swaggerCustomOptions } from './config/swagger.config';
 import helmet from 'helmet';
-import * as compression from 'compression';
+import compression = require('compression');
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap(): Promise<void> {
   try {
     const app: INestApplication = await NestFactory.create(AppModule);
+    const configService = app.get(ConfigService);
 
     app.use(compression());
     app.enableCors();
@@ -22,7 +24,7 @@ async function bootstrap(): Promise<void> {
       SwaggerModule.createDocument(app, swaggerConfig),
       swaggerCustomOptions,
     );
-    await app.listen(3000);
+    await app.listen(configService.get<number>('PORT'));
   } catch (error) {
     console.error(error);
   }
