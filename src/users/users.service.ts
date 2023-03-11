@@ -31,13 +31,7 @@ export class UsersService {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
-    try {
-      const createdUser = this.userModel.create(createUserDto);
-
-      return createdUser;
-    } catch (err) {
-      throw new InternalServerErrorException();
-    }
+    return this.userModel.create(createUserDto);
   }
 
   /**
@@ -47,9 +41,8 @@ export class UsersService {
    * @returns {Promise<User | null>} The user with the given username, or null if it does not exist.
    */
   async findUser(username: string): Promise<User | null> {
-    console.log('username', username)
+    console.log('username', username);
     const user = await this.userModel.findOne({ username }).exec();
-    
 
     if (!user) {
       return null;
