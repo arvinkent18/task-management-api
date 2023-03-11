@@ -21,7 +21,6 @@ export class UsersService {
    *
    * @param {CreateUserDto} createUserDto - The data for the user to create.
    * @throws {UnprocessableEntityException} If the user already exists.
-   * @throws {InternalServerErrorException} If there is an internal server error.
    * @returns {Promise<User>} The newly created user.
    */
   async createUser(createUserDto: CreateUserDto): Promise<User> {
@@ -41,7 +40,6 @@ export class UsersService {
    * @returns {Promise<User | null>} The user with the given username, or null if it does not exist.
    */
   async findUser(username: string): Promise<User | null> {
-    console.log('username', username);
     const user = await this.userModel.findOne({ username }).exec();
 
     if (!user) {
