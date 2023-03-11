@@ -1,15 +1,12 @@
-import { QueryResponse } from './../common/interfaces/query-response.interface';
 import {
   Body,
   Controller,
   Post,
   Query,
-  HttpStatus,
   UseInterceptors,
   UnprocessableEntityException,
   InternalServerErrorException,
   Get,
-  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './user.interface';
@@ -55,7 +52,7 @@ export class UsersController {
    * @param {GetUserDto} getUserDto - The data for the user to search.
    * @returns {Promise<User>} The user data.
    */
-  @Get('username')
+  @Get('find')
   @UseInterceptors(TransformResponseInterceptor)
   async findUser(@Query() getUserDto: GetUserDto): Promise<User> {
     try {
