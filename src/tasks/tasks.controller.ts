@@ -1,9 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
+  NotFoundException,
+  Param,
   Post,
+  Put,
   Query,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -22,6 +26,8 @@ import {
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '../users/user.interface';
 import { GetTaskDto } from './dto/get-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
+import { Types } from 'mongoose';
 @ApiBearerAuth()
 @ApiTags('tasks')
 @Controller('tasks')
@@ -90,6 +96,52 @@ export class TasksController {
 
       return task;
     } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  /**
+   * Updates a task by ID
+   *
+   * @param {string} id - The ID of the task to update
+   * @param {UpdateTaskDto} updateTaskDto - The updated task data
+   * @throws {NotFoundException} If the task is not existing.
+   * @throws {InternalServerErrorException} If an unexpected error occurs while updating the task.
+   * @returns {Promise<Task>} The updated task
+   */
+  @Put(':id')
+  async update(
+    @Param('id') id: Types.ObjectId,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ): Promise<Task> {
+    try {
+      const task = this.tasksService.updateTask(id, updateTaskDto);
+
+      return task;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException();
+    }
+  }
+
+  /**
+   * Deletes a task by ID
+   *
+   * @param {string} id - The ID of the task to delete
+   * @throws {NotFoundException} If the task is not existing.
+   * @throws {InternalServerErrorException} If an unexpected error occurs while deleting the task.
+   * @returns {Promise<void>}
+   */
+  @Delete(':id')
+  async remove(@Param('id') id: Types.ObjectId): Promise<void> {
+    try {
+      this.tasksService.deleteTask(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException();
     }
   }
