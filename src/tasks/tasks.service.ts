@@ -36,7 +36,7 @@ export class TasksService {
     try {
       const createdTask = this.taskModel.create({
         ...createTaskDto,
-        userId: user._id,
+        userId: user.id,
       });
 
       return createdTask;

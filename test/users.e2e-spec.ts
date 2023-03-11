@@ -1,3 +1,4 @@
+import { QueryResponse } from './../src/common/interfaces/query-response.interface';
 import { mockUser } from '../src/users/mocks/users.mock';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -29,9 +30,13 @@ describe('Users (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/users')
       .send(mockUser)
-      .expect(201);
+      .expect(HttpStatus.CREATED);
 
-    expect(response.body.username).toEqual(mockUser.username);
+    const { statusCode, data }: QueryResponse = response.body;
+    delete data.password;
+    delete mockUser.password;
+    expect(statusCode).toEqual(HttpStatus.CREATED);
+    expect(data).toEqual({ ...mockUser, id: data.id });
   });
 
   it('should throw an error for existing user', async () => {

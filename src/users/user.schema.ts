@@ -4,7 +4,17 @@ import { UserStatus } from './user-status.enum';
 import { User } from './user.interface';
 import { hashPassword } from '../common/helpers/password-hashing';
 
-@Schema()
+@Schema({ 
+  versionKey: false, 
+  timestamps: true,
+  toJSON: {
+    transform: function (doc, ret) {
+      ret.id = ret._id.toHexString();
+      delete ret._id;
+      delete ret.__v;
+    },
+  },
+ })
 export class UserDocument extends Document implements User {
   @Prop()
   username!: string;
@@ -14,15 +24,9 @@ export class UserDocument extends Document implements User {
 
   @Prop({
     enum: UserStatus,
-    default: UserStatus.INACTIVE,
+    default: UserStatus.Inactive,
   })
   status!: UserStatus;
-
-  @Prop({ default: Date.now })
-  createdAt!: Date;
-
-  @Prop({ default: Date.now })
-  updatedAt!: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDocument);
@@ -36,6 +40,7 @@ UserSchema.pre('save', async function (next) {
 
   try {
     user.password = await hashPassword(user.password);
+    delete this.password;
     next();
   } catch (error) {
     return next(error);

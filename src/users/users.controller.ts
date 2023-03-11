@@ -11,9 +11,9 @@ import {
 import { UsersService } from './users.service';
 import { User } from './user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TransformResponseInterceptor } from '../common/interceptors/transform-response.interceptor';
-import { Public } from '../common/decorators/public.decorator';
+import { GetUserDto } from './dto/get-user.dto';
 
 @ApiTags('users')
 @Controller('users')

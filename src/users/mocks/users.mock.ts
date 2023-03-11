@@ -1,13 +1,13 @@
-import { Types } from 'mongoose';
 import { UserStatus } from '../user-status.enum';
 import { User } from '../user.interface';
 import * as bcrypt from 'bcrypt';
 
 export const mockUser: User = {
-  _id: new Types.ObjectId(),
   username: 'admin',
   password: bcrypt.hashSync('admin', 10),
-  status: UserStatus.INACTIVE,
+  status: UserStatus.Inactive,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
 };
 
 export const mockUserModel = {
