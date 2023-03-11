@@ -11,11 +11,12 @@ import {
 import { UsersService } from './users.service';
 import { User } from './user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiBody, ApiOkResponse, ApiQuery, ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiQuery, ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { TransformResponseInterceptor } from '../common/interceptors/transform-response.interceptor';
 import { GetUserDto } from './dto/get-user.dto';
 
 @ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
