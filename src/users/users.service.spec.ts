@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { DB_USER_MODEL, ERR_UNPROCESSABLE_ENTITY } from '../constants';
-import { mockUser, mockUserModel } from './mocks/users.mock';
 import { Model } from 'mongoose';
 import { UserDocument } from './user.schema';
 import { User } from './user.interface';
@@ -10,6 +9,8 @@ import { GetUserDto } from './dto/get-user.dto';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { hashPassword } from '../common/helpers/password-hashing';
 import { CreateUserDto } from './dto/create-user.dto';
+import { mockUser } from './mocks/user-data.mock';
+import { mockUserModel } from './mocks/user-model.mock';
 
 describe('UsersService', () => {
   let usersService: UsersService;

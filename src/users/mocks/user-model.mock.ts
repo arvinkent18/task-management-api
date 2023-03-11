@@ -1,8 +1,8 @@
-import { mockUser } from "./users.mock";
+import { mockUser } from './user-data.mock';
 
-export class UserModel {
-  public static findOne = jest.fn(() => ({
-    exec: jest.fn().mockResolvedValueOnce(mockUser),
-  }));
-  public save = jest.fn().mockResolvedValueOnce(mockUser);
-}
+export const mockUserModel = {
+  create: jest.fn().mockResolvedValueOnce(mockUser),
+  findOne: jest.fn().mockReturnValue(mockUser),
+  exec: jest.fn().mockResolvedValueOnce(mockUser),
+  save: jest.fn().mockResolvedValueOnce(mockUser),
+};
