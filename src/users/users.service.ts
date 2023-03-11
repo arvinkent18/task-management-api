@@ -1,3 +1,4 @@
+import { GetUserDto } from './dto/get-user.dto';
 import { User } from './user.interface';
 import {
   Injectable,
@@ -25,8 +26,9 @@ export class UsersService {
    */
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { username } = createUserDto;
+    const existingUser = await this.findUser({ username });
 
-    if (await this.findUser(username)) {
+    if (existingUser) {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
     }
 
@@ -39,13 +41,13 @@ export class UsersService {
    * @param {string} username - The username to check.
    * @returns {Promise<User | null>} The user with the given username, or null if it does not exist.
    */
-  async findUser(username: string): Promise<User | null> {
-    const user = await this.userModel.findOne({ username }).exec();
-
+  async findUser(getUserDto: GetUserDto): Promise<User | null> {
+    const { username } = getUserDto;
+    const user: User | null = await this.userModel.findOne({ username });
     if (!user) {
       return null;
     }
-
+  
     return user;
   }
 }
