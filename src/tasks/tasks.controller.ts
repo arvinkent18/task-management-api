@@ -21,6 +21,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -93,6 +94,32 @@ export class TasksController {
     }
   }
 
+    /**
+   * Find a task by Title.
+   *
+   * @param {GetTaskDto} getTaskDto - The data required to find.
+   * @throws {InternalServerErrorException} If an unexpected error occurs while creating the new task.
+   * @returns {Promise<Task | null>} A promise that resolves to the existing task, or `null` if it doesn't exist.
+   */
+    @ApiOkResponse({
+      description: 'The task has been successfully fetched.',
+    })
+    @ApiInternalServerErrorResponse({
+      description: 'An unexpected error occurred while fetching the task.',
+    })
+    @Get('/search')
+    async findTaskByTitle(
+      @Query() getTaskDto: GetTaskDto,
+    ): Promise<Task | null> {
+      try {
+        const task = this.tasksService.findTaskByTitle(getTaskDto);
+  
+        return task;
+      } catch (error) {
+        throw new InternalServerErrorException();
+      }
+    }
+
   /**
    * Find a task by ID.
    *
@@ -121,32 +148,6 @@ export class TasksController {
         throw error;
       }
 
-      throw new InternalServerErrorException();
-    }
-  }
-
-  /**
-   * Find a task by Title.
-   *
-   * @param {GetTaskDto} getTaskDto - The data required to find.
-   * @throws {InternalServerErrorException} If an unexpected error occurs while creating the new task.
-   * @returns {Promise<Task | null>} A promise that resolves to the existing task, or `null` if it doesn't exist.
-   */
-  @ApiOkResponse({
-    description: 'The task has been successfully fetched.',
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'An unexpected error occurred while fetching the task.',
-  })
-  @Get('search')
-  async findTaskByTitle(
-    @Query() getTaskDto: GetTaskDto,
-  ): Promise<Task | null> {
-    try {
-      const task = this.tasksService.findTaskByTitle(getTaskDto);
-
-      return task;
-    } catch (error) {
       throw new InternalServerErrorException();
     }
   }
