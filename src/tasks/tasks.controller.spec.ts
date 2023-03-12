@@ -6,9 +6,8 @@ import { getModelToken } from '@nestjs/mongoose';
 import { mockTask, mockTaskModel } from './mocks/tasks.mock';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
-import { Task } from './task.interface';
-import { mockUser } from '../users/mocks/users.mock';
 import { UnprocessableEntityException } from '@nestjs/common';
+import { mockUser } from '../users/mocks/user-data.mock';
 
 describe('TasksController', () => {
   let tasksController: TasksController;
@@ -44,7 +43,7 @@ describe('TasksController', () => {
       const createTaskDto: CreateTaskDto = {
         title: 'Test task',
         description: 'Test description',
-        status: TaskStatus.OPEN,
+        status: TaskStatus.Open,
       };
 
       jest.spyOn(tasksService, 'createTask').mockResolvedValue(mockTask);
@@ -62,7 +61,7 @@ describe('TasksController', () => {
       const createTaskDto: CreateTaskDto = {
         title: 'Test task',
         description: 'Test description',
-        status: TaskStatus.OPEN,
+        status: TaskStatus.Open,
       };
 
       jest
