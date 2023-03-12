@@ -4,7 +4,7 @@ import { Task } from '../task.interface';
 export const mockTask: Task = {
   title: 'Test task',
   description: 'Test description',
-  status: TaskStatus.OPEN,
+  status: TaskStatus.Open,
 };
 
 export const mockTaskModel = {

@@ -17,7 +17,7 @@ export class CreateTaskDto {
   @ApiProperty({
     enum: TaskStatus,
     enumName: 'TaskStatus',
-    example: TaskStatus.IN_PROGRESS,
+    example: TaskStatus.In_Progress,
   })
   @IsEnum(TaskStatus)
   @Transform(({ value }) => value.toUpperCase())

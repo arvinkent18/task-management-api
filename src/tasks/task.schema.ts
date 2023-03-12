@@ -20,7 +20,7 @@ export class TaskDocument extends Document implements Task {
 
   @Prop({
     enum: TaskStatus,
-    default: TaskStatus.OPEN,
+    default: TaskStatus.Open,
   })
   status!: TaskStatus;
 }
