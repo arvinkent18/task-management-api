@@ -1,8 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Payload } from '../../auth/payload.interface';
-import { Token } from '../../auth/token.interface';
-
+import { Payload } from '../../authentication/payload.interface';
+import { Token } from '../../authentication/token.interface';
 interface DecodedToken extends Payload, Token {
   iat: number;
   exp: number;
