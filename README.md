@@ -1,73 +1,63 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Tasks Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a simple API for managing tasks. It allows you to create, read, update and delete tasks.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Getting Started
 
-## Description
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Prerequisites
 
-## Installation
+You will need to have Node.js and MongoDB installed on your machine.
 
-```bash
-$ npm install
-```
+### Installing
 
-## Running the app
+1. Clone the repository to your local machine.
+2. Navigate to the project directory and run `npm install`.
+3. Create a `.env` file in the root of the project and add the following environment variables:
+4. Start the server by running `npm run start:dev`.
 
-```bash
-# development
-$ npm run start
+### Routes
 
-# watch mode
-$ npm run start:dev
+The following routes are available:
 
-# production mode
-$ npm run start:prod
-```
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST   | /auth/register | Register a new user |
+| POST   | /auth/login | Log in an existing user |
+| GET    | /tasks | Get all tasks |
+| GET    | /tasks/:id | Get a single task by ID |
+| POST   | /tasks | Create a new task |
+| PUT    | /tasks/:id | Update a task by ID |
+| DELETE | /tasks/:id | Delete a task by ID |
 
-## Test
+### Pagination
+
+To paginate the results for the `/tasks` route, you can add the following query parameters:
+
+| Parameter | Description |
+|-----------|-------------|
+| page      | The page number to retrieve (default is 1) |
+| limit     | The number of items to retrieve per page (default is 10) |
+
+### Testing
+
+You can run the tests by running the following:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run test
+npm run test:e2e
 ```
 
-## Support
+### Environment Variable
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/task-management
+JWT_SECRET=your_secret_key
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Author
 
-## Stay in touch
+Arvin Kent Lazaga
+- Email: arvinkent121816@gmail.com
+- LinkedIn: https://www.linkedin.com/in/arvin-kent-lazaga-895783a8/
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## License
-
-Nest is [MIT licensed](LICENSE).
