@@ -28,7 +28,7 @@ import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '../users/user.interface';
 import { GetTaskDto } from './dto/get-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { Types } from 'mongoose';
+
 @ApiBearerAuth()
 @ApiTags('tasks')
 @Controller('tasks')
