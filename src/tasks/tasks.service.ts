@@ -61,19 +61,16 @@ export class TasksService {
   /**
    * Updates a task by ID
    *
-   * @param {Types.ObjectId} id - The ID of the task to update
+   * @param {string} id - The ID of the task to update
    * @param {UpdateTaskDto} updateTaskDto - The updated task data
    * @throws {NotFoundException} If no task is found with the given ID
    * @returns {Promise<Task>} The updated task
    */
-  async updateTask(
-    id: Types.ObjectId,
-    updateTaskDto: UpdateTaskDto,
-  ): Promise<Task> {
-    const task = await this.taskModel.findByIdAndUpdate(id, updateTaskDto, {
-      new: true,
-      useFindAndModify: false,
-    });
+  async updateTask(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
+    const filter = { _id: id };
+    const options = { new: true };
+    const task = await this.taskModel.findOneAndUpdate(filter, updateTaskDto, options);
+
     if (!task) {
       throw new NotFoundException();
     }
@@ -84,15 +81,12 @@ export class TasksService {
   /**
    * Deletes a task by ID
    *
-   * @param {Types.ObjectId} id - The ID of the task to delete
+   * @param {string} id - The ID of the task to delete
    * @throws {NotFoundException} If no task is found with the given ID
    * @returns {Promise<void>}
    */
-  async deleteTask(id: Types.ObjectId): Promise<void> {
-    const task = await this.taskModel.findByIdAndRemove(id);
-
-    if (!task) {
-      throw new NotFoundException();
-    }
+  async deleteTask(id: string): Promise<void> {
+    const filter = { _id: id };
+    await this.taskModel.findOneAndDelete(filter);
   }
 }

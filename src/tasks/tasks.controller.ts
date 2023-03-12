@@ -20,6 +20,7 @@ import {
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -88,7 +89,6 @@ export class TasksController {
   })
   @Get()
   async findTask(
-    @GetUser() user: User,
     @Query() getTaskDto: GetTaskDto,
   ): Promise<Task | null> {
     try {
@@ -111,7 +111,7 @@ export class TasksController {
    */
   @Put(':id')
   async update(
-    @Param('id') id: Types.ObjectId,
+    @Param('id') id: string,
     @Body() updateTaskDto: UpdateTaskDto,
   ): Promise<Task> {
     try {
@@ -129,15 +129,16 @@ export class TasksController {
   /**
    * Deletes a task by ID
    *
-   * @param {string} id - The ID of the task to delete
+   * @param {Types.ObjectId} id - The ID of the task to delete
    * @throws {NotFoundException} If the task is not existing.
    * @throws {InternalServerErrorException} If an unexpected error occurs while deleting the task.
    * @returns {Promise<void>}
    */
   @Delete(':id')
-  async remove(@Param('id') id: Types.ObjectId): Promise<void> {
+  @ApiParam({ name: 'id' })
+  async remove(@Param('id') id: string): Promise<void> {
     try {
-      return this.tasksService.deleteTask(id);
+      this.tasksService.deleteTask(id);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
