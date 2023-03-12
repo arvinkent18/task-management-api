@@ -12,6 +12,7 @@ import { Task } from './task.interface';
 import { User } from '../users/user.interface';
 import { GetTaskDto } from './dto/get-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { GetTasksDto } from './dto/get-tasks.dto';
 
 @Injectable()
 export class TasksService {
@@ -29,7 +30,7 @@ export class TasksService {
    */
   async createTask(user: User, createTaskDto: CreateTaskDto): Promise<Task> {
     const { title } = createTaskDto;
-    const isTaskExist = await this.findTask({ title });
+    const isTaskExist = await this.findTaskByTitle({ title });
 
     if (isTaskExist) {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
@@ -42,12 +43,43 @@ export class TasksService {
   }
 
   /**
-   * Checks if a task with the specified title already exists.
+   * Fetch all the tasks owned by the user
+   * 
+   * @param {GetTasksDto} getTasksDto - The data required for pagination. 
+   * @returns {Promise<Task[]>} The list of tasks
+   */
+  async getTasks(getTasksDto: GetTasksDto): Promise<Task[]> {
+    const { page, limit } = getTasksDto;
+    const skip = (page - 1) * limit;
+    const tasks = this.taskModel.find().skip(skip).limit(limit).exec();
+    
+    return tasks;
+  }
+
+  /**
+   * Find a task by ID.
+   *
+   * @param {string} id - The ID of the task to find.
+   * @throws {NotFoundException} If the task is not found.
+   * @returns {Promise<Task>} Task details.
+   */
+  async findTaskById(id: string): Promise<Task> {
+    const task: Task = await this.taskModel.findById(id);
+
+    if (!task) {
+      throw new NotFoundException();
+    }
+
+    return task;
+  }
+
+  /**
+   * Find a task by Title.
    *
    * @param {GetTaskDto} getTaskDto - The data required to find.
    * @returns {Promise<Task | null>} A promise that resolves to the existing task, or `null` if it doesn't exist.
    */
-  async findTask(getTaskDto: GetTaskDto): Promise<Task | null> {
+  async findTaskByTitle(getTaskDto: GetTaskDto): Promise<Task | null> {
     const { title } = getTaskDto;
     const task: Task | null = await this.taskModel.findOne({ title });
 

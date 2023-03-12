@@ -1,7 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
-import { User } from '../../users/user.interface';
 
-export interface QueryResponse {
+export interface QueryResponse<T> {
   statusCode: HttpStatus;
-  data: User;
+  data: T;
 }

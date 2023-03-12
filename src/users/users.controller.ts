@@ -3,7 +3,6 @@ import {
   Controller,
   Post,
   Query,
-  UseInterceptors,
   UnprocessableEntityException,
   InternalServerErrorException,
   Get,
@@ -11,8 +10,7 @@ import {
 import { UsersService } from './users.service';
 import { User } from './user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiBody, ApiOkResponse, ApiQuery, ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { TransformResponseInterceptor } from '../common/interceptors/transform-response.interceptor';
+import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { GetUserDto } from './dto/get-user.dto';
 
 @ApiTags('users')
@@ -33,7 +31,6 @@ export class UsersController {
     type: CreateUserDto,
   })
   @Post()
-  @UseInterceptors(TransformResponseInterceptor)
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     try {
       const user = this.usersService.createUser(createUserDto);
@@ -49,12 +46,11 @@ export class UsersController {
 
   /**
    * Find a user by username.
-   * 
+   *
    * @param {GetUserDto} getUserDto - The data for the user to search.
    * @returns {Promise<User>} The user data.
    */
   @Get('find')
-  @UseInterceptors(TransformResponseInterceptor)
   async findUser(@Query() getUserDto: GetUserDto): Promise<User> {
     try {
       const user = this.usersService.findUser(getUserDto);

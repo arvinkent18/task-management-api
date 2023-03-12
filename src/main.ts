@@ -16,7 +16,13 @@ async function bootstrap(): Promise<void> {
     app.enableCors();
     app.use(helmet());
     app.useGlobalPipes(
-      new ValidationPipe({ whitelist: true, transform: true }),
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      }),
     );
     SwaggerModule.setup(
       'api-docs',

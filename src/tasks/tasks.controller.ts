@@ -28,6 +28,7 @@ import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '../users/user.interface';
 import { GetTaskDto } from './dto/get-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { GetTasksDto } from './dto/get-tasks.dto';
 
 @ApiBearerAuth()
 @ApiTags('tasks')
@@ -72,11 +73,61 @@ export class TasksController {
       throw new InternalServerErrorException();
     }
   }
+  
+ 
+  /**
+   * Fetch all the tasks
+   * 
+   * @param {GetTasksDto} getTasksDto - The data required for pagination.
+   * @throws {InternalServerErrorException} If an unexpected error occurs while creating the new task. 
+   * @returns {Promise<Task[]>} The list of tasks
+   */
+  @Get()
+  async getTasks(@Query() getTasksDto: GetTasksDto): Promise<Task[]> {
+    try {
+      const tasks = this.tasksService.getTasks(getTasksDto);
+
+      return tasks;
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
 
   /**
-   * Checks if a task with the specified title already exists.
+   * Find a task by ID.
    *
    * @param {User} user - The user who will own the new task.
+   * @param {GetTaskDto} getTaskDto - The data required to find.
+   * @throws {NotFoundException} If the task is not found.
+   * @throws {InternalServerErrorException} If an unexpected error occurs while creating the new task.
+   * @returns {Promise<Task>} A promise that resolves to the existing task, or `null` if it doesn't exist.
+   */
+  @ApiOkResponse({
+    description: 'The task has been successfully fetched.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'An unexpected error occurred while fetching the task.',
+  })
+  @Get(':id')
+  async findTaskById(
+    @Param('id') id: string,
+  ): Promise<Task> {
+    try {
+      const task = this.tasksService.findTaskById(id);
+
+      return task;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException();
+    }
+  }
+
+  /**
+   * Find a task by Title.
+   *
    * @param {GetTaskDto} getTaskDto - The data required to find.
    * @throws {InternalServerErrorException} If an unexpected error occurs while creating the new task.
    * @returns {Promise<Task | null>} A promise that resolves to the existing task, or `null` if it doesn't exist.
@@ -87,12 +138,12 @@ export class TasksController {
   @ApiInternalServerErrorResponse({
     description: 'An unexpected error occurred while fetching the task.',
   })
-  @Get()
-  async findTask(
+  @Get('search')
+  async findTaskByTitle(
     @Query() getTaskDto: GetTaskDto,
   ): Promise<Task | null> {
     try {
-      const task = this.tasksService.findTask(getTaskDto);
+      const task = this.tasksService.findTaskByTitle(getTaskDto);
 
       return task;
     } catch (error) {
@@ -129,7 +180,7 @@ export class TasksController {
   /**
    * Deletes a task by ID
    *
-   * @param {Types.ObjectId} id - The ID of the task to delete
+   * @param {string} id - The ID of the task to delete
    * @throws {NotFoundException} If the task is not existing.
    * @throws {InternalServerErrorException} If an unexpected error occurs while deleting the task.
    * @returns {Promise<void>}
