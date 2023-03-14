@@ -1,10 +1,21 @@
-import { Ability, InferSubjects } from '@casl/ability';
-import { TaskDocument } from './tasks/task.schema';
 import { UserDocument } from './users/user.schema';
-import { AuthorizationAction } from './authorization/authorization-action.enum';
+import { TaskDocument } from './tasks/task.schema';
+import {
+  Ability,
+  AbilityBuilder,
+  InferSubjects,
+  PureAbility,
+} from '@casl/ability';
+import { Action } from './authorization/action.enum';
 
-export type Subjects =
-  | InferSubjects<typeof UserDocument | typeof TaskDocument>
-  | 'all';
+// CASL types
+export type Subjects = InferSubjects<
+  typeof UserDocument | typeof TaskDocument | 'all'
+>;
+// export type AppAbility = PureAbility<[Action, Subjects]>;
+// export type AppAbilityBuilder = AbilityBuilder<AppAbility>;
+export type AppAbility = Ability<[Action, Subjects]>;
 
-export type AppAbility = Ability<[AuthorizationAction, Subjects]>;
+export type FlatTask = TaskDocument & {
+  'author.id': TaskDocument['author']['id']
+};

@@ -1,11 +1,13 @@
+import { DB_TASK_MODEL } from '../constants';
+import { TaskDocument } from 'tasks/task.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { UserStatus } from './user-status.enum';
 import { User } from './user.interface';
 import { hashPassword } from '../common/helpers/password-hashing';
 
-@Schema({ 
-  versionKey: false, 
+@Schema({
+  versionKey: false,
   timestamps: true,
   toJSON: {
     transform: function (doc, ret) {
@@ -14,7 +16,7 @@ import { hashPassword } from '../common/helpers/password-hashing';
       delete ret.__v;
     },
   },
- })
+})
 export class UserDocument extends Document implements User {
   @Prop()
   username!: string;
@@ -27,6 +29,9 @@ export class UserDocument extends Document implements User {
     default: UserStatus.Inactive,
   })
   status!: UserStatus;
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: DB_TASK_MODEL }] })
+  tasks: TaskDocument[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDocument);

@@ -7,12 +7,25 @@ import { DB_TASK_MODEL } from '../constants';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ 
-      name: DB_TASK_MODEL, 
-      schema: TaskSchema, 
-    }]),
+    MongooseModule.forFeature([
+      {
+        name: DB_TASK_MODEL,
+        schema: TaskSchema,
+      },
+    ]),
   ],
-  providers: [TasksService],
+  providers: [
+    TasksService,
+    {
+      provide: DB_TASK_MODEL,
+      useValue: DB_TASK_MODEL,
+    },
+  ],
   controllers: [TasksController],
+  exports: [
+    TasksService, 
+    MongooseModule,
+    DB_TASK_MODEL,
+  ],
 })
 export class TasksModule {}

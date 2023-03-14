@@ -38,7 +38,7 @@ export class TasksService {
 
     return this.taskModel.create({
       ...createTaskDto,
-      userId: user.id,
+      author: user.id,
     });
   }
 
@@ -63,8 +63,8 @@ export class TasksService {
    * @throws {NotFoundException} If the task is not found.
    * @returns {Promise<Task>} Task details.
    */
-  async findTaskById(id: string): Promise<Task> {
-    const task: Task = await this.taskModel.findById(id);
+  async findTaskById(id: string): Promise<TaskDocument> {
+    const task = await this.taskModel.findById(id);
 
     if (!task) {
       throw new NotFoundException();

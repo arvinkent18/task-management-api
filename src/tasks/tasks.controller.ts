@@ -1,3 +1,4 @@
+import { ReadTaskHandler } from './../authorization/handlers/read-task.handler';
 import {
   Body,
   Controller,
@@ -21,7 +22,6 @@ import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiParam,
-  ApiQuery,
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -30,12 +30,15 @@ import { User } from '../users/user.interface';
 import { GetTaskDto } from './dto/get-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { GetTasksDto } from './dto/get-tasks.dto';
+import { CheckPolicies } from '../authorization/policy.decorator';
 
 @ApiBearerAuth()
 @ApiTags('tasks')
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(
+    private readonly tasksService: TasksService,
+    ) {}
 
   /**
    * Creates a new task for the specified user.
@@ -135,6 +138,7 @@ export class TasksController {
   @ApiInternalServerErrorResponse({
     description: 'An unexpected error occurred while fetching the task.',
   })
+  @CheckPolicies(ReadTaskHandler)
   @Get(':id')
   async findTaskById(
     @Param('id') id: string,

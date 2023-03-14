@@ -1,4 +1,9 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
 import { PaginatedData } from '../interfaces/paginated-data.interface';
 import { PaginatedResponse } from '../interfaces/paginated-response.interface';
 import { QueryResponse } from '../interfaces/query-response.interface';
@@ -6,8 +11,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class TransformResponseInterceptor<T> implements NestInterceptor<T, QueryResponse<T> | PaginatedResponse<T>> {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<QueryResponse<T> | PaginatedResponse<T>> {
+export class TransformResponseInterceptor<T>
+  implements NestInterceptor<T, QueryResponse<T> | PaginatedResponse<T>>
+{
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<QueryResponse<T> | PaginatedResponse<T>> {
     return next.handle().pipe(
       map((data): QueryResponse<T> | PaginatedResponse<T> => {
         const response = context.switchToHttp().getResponse();

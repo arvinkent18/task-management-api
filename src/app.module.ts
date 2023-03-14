@@ -1,3 +1,4 @@
+import { PolicyGuard } from './authorization/policy.guard';
 import { TransformResponseInterceptor } from './common/interceptors/transform-response.interceptor';
 import { AppConfigModule } from './core/app-config.module';
 import { DatabaseModule } from './database/database.module';
@@ -9,6 +10,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { THROTTLE_TTL, THROTTLE_LIMIT } from './constants';
 import { JwtAuthGuard } from './authentication/auth.guard';
 import { AuthModule } from './authentication/auth.module';
+import { PolicyModule } from './authorization/policy.module';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { AuthModule } from './authentication/auth.module';
     }),
     DatabaseModule,
     AuthModule,
+    PolicyModule,
     TasksModule,
     UsersModule,
   ],
@@ -27,6 +30,10 @@ import { AuthModule } from './authentication/auth.module';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PolicyGuard,
     },
     {
       provide: APP_INTERCEPTOR,
