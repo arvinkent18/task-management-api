@@ -30,7 +30,7 @@ export class TasksService {
    */
   async createTask(user: User, createTaskDto: CreateTaskDto): Promise<Task> {
     const { title } = createTaskDto;
-    const isTaskExist = await this.findTaskByTitle({ title });
+    const isTaskExist = await this.getTaskByTitle({ title });
 
     if (isTaskExist) {
       throw new UnprocessableEntityException(ERR_UNPROCESSABLE_ENTITY);
@@ -63,7 +63,7 @@ export class TasksService {
    * @throws {NotFoundException} If the task is not found.
    * @returns {Promise<Task>} Task details.
    */
-  async findTaskById(id: string): Promise<TaskDocument> {
+  async getTaskById(id: string): Promise<TaskDocument> {
     const task = await this.taskModel.findById(id);
 
     if (!task) {
@@ -79,7 +79,7 @@ export class TasksService {
    * @param {GetTaskDto} getTaskDto - The data required to find.
    * @returns {Promise<Task | null>} A promise that resolves to the existing task, or `null` if it doesn't exist.
    */
-  async findTaskByTitle(getTaskDto: GetTaskDto): Promise<Task | null> {
+  async getTaskByTitle(getTaskDto: GetTaskDto): Promise<Task | null> {
     const { title } = getTaskDto;
     const task: Task | null = await this.taskModel.findOne({ title });
 

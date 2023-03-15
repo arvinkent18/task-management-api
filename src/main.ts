@@ -12,6 +12,8 @@ async function bootstrap(): Promise<void> {
     const app: INestApplication = await NestFactory.create(AppModule);
     const configService = app.get(ConfigService);
 
+    console.log('MONGOURI:', configService.get('MONGODB_URI'))
+
     app.use(compression());
     app.enableCors();
     app.use(helmet());

@@ -10,6 +10,10 @@ import { UserDocument } from '../users/user.schema';
 import { Action } from './action.enum';
 import { TaskDocument } from '../tasks/task.schema';
 
+/**
+ * PolicyFactory creates a new Casl.js Ability instance for the user.
+ * It sets up rules for the user's abilities based on the user's document.
+ */
 @Injectable()
 export class PolicyFactory {
   createForUser(user: UserDocument) {

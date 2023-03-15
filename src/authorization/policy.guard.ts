@@ -11,6 +11,9 @@ import { PolicyFactory } from './policy.factory';
 import { PolicyHandler } from './policy.handler';
 import { CHECK_POLICIES_KEY } from './policy.decorator';
 
+/**
+ * A guard that checks whether a user is authorized to access a resource using one or more policy handlers.
+ */
 @Injectable()
 export class PolicyGuard implements CanActivate {
   private readonly logger = new Logger(PolicyGuard.name);
@@ -21,6 +24,12 @@ export class PolicyGuard implements CanActivate {
     private readonly moduleRef: ModuleRef,
   ) {}
 
+  /**
+   * Checks whether the user is authorized to access the resource by checking against all applicable policy handlers.
+   * 
+   * @param {ExecutionContext} context - The execution context for the current request
+   * @returns {Promise<boolean>} indicating whether the user is authorized to access the resource
+   */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     this.logger.log('AuthorizationGuard is executing...');
 

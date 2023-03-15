@@ -1,27 +1,41 @@
-version: '3.8'
-
 services:
-  app:
-    build:
-      context: .
-    environment:
-      MONGO_URI: mongodb://mongodb:27017/task_management
-    ports:
-      - 3000:3000
-    depends_on:
-      - mongodb
-
   mongodb:
-    image: mongo:4.4.11-bionic
-    restart: always
+    image: mongo:latest
+    container_name: mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: task_management
+      MONGODB_URI: mongodb://localhost:27017/task_management
+    networks:
+      - api_server
+    restart: unless-stopped
     ports:
       - 27017:27017
     volumes:
-      - mongodb_data:/data/db
+      - ./data:/data/db
 
-volumes:
-  mongodb_data:
+  api:
+    container_name: api-container
+    image: api:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:debug
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
+    environment:
+      NODE_ENV: development
+      JWT_SECRET: secret
+      JWT_EXPIRES_IN: 24h
+    depends_on:
+      - mongodb
+    networks:
+      - api_server
+
+networks:
+  api_server:
+    driver: bridge
